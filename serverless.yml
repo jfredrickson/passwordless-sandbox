@@ -1,0 +1,68 @@
+service: passwordless-sandbox
+frameworkVersion: '3'
+
+custom:
+  sessionsTableName: '${self:provider.stage}-sessions'
+  pythonRequirements:
+    slim: true
+    layer: true
+
+provider:
+  name: aws
+  runtime: python3.9
+  memorySize: 256
+  stage: dev
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [ SessionsTable, Arn ]
+  environment:
+    SESSIONS_TABLE: ${self:custom.sessionsTableName}
+
+package:
+  patterns:
+    - '!**'
+    - 'sandbox/**'
+
+functions:
+  api:
+    handler: sandbox.main.handler
+    events:
+      - httpApi: '*'
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
+    environment:
+      SMTP_HOST: ${ssm:/${self:provider.stage}-smtp-host}
+      SMTP_USER: ${ssm:/${self:provider.stage}-smtp-user}
+      SMTP_PASSWORD: ${ssm:/${self:provider.stage}-smtp-password}
+
+plugins:
+  - serverless-python-requirements
+
+resources:
+  Resources:
+    SessionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: session_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: session_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.sessionsTableName}
+        TimeToLiveSpecification:
+          AttributeName: expiration
+          Enabled: true

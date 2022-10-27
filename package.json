@@ -1,0 +1,10 @@
+{
+  "name": "passwordless-sandbox",
+  "version": "0.1.0",
+  "description": "Experiments with passwordless login flows",
+  "author": "Jeff Fredrickson <jeffrey.fredrickson@gsa.gov>",
+  "devDependencies": {
+    "serverless": "^3.23.0",
+    "serverless-python-requirements": "^5.1.0"
+  }
+}

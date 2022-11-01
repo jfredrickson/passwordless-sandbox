@@ -5,6 +5,7 @@
   "author": "Jeff Fredrickson <jeffrey.fredrickson@gsa.gov>",
   "devDependencies": {
     "serverless": "^3.23.0",
+    "serverless-dynamodb-local": "^0.2.40",
     "serverless-python-requirements": "^5.1.0"
   }
 }

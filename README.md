@@ -35,7 +35,11 @@ poetry install
 
 ### DynamoDB
 
-If running locally, [set up a local DynamoDB using Amazon's instructions](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html) (Docker is an easy approach).
+If running locally, set up a local DynamoDB instance using the Serverless plugin:
+
+```
+serverless dynamodb install
+```
 
 ### Environment
 
@@ -56,6 +60,7 @@ Configure these parameters in [AWS Parameter Store](https://console.aws.amazon.c
 ### Running locally
 
 ```
+serverless dynamodb start --migrate
 poetry run server
 ```
 

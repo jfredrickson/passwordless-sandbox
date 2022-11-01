@@ -6,6 +6,9 @@ custom:
   pythonRequirements:
     slim: true
     layer: true
+  dynamodb:
+    stages:
+      - dev
 
 provider:
   name: aws
@@ -47,6 +50,7 @@ functions:
 
 plugins:
   - serverless-python-requirements
+  - serverless-dynamodb-local
 
 resources:
   Resources:
